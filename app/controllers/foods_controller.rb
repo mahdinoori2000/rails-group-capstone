@@ -1,5 +1,6 @@
 class FoodsController < ApplicationController
   before_action :set_food, only: %i[show edit update destroy]
+  before_action :authenticate_user!, only: %i[new create edit update destroy]
 
   # GET /foods or /foods.json
   def index
@@ -11,16 +12,16 @@ class FoodsController < ApplicationController
 
   # GET /foods/new
   def new
-    @food = Food.new
+    @food = current_user.foods.build
   end
 
   # GET /foods/1/edit
   def edit; end
 
   # POST /foods or /foods.json
+  # POST /foods or /foods.json
   def create
-    @food = Food.new(food_params)
-
+    @food = current_user.foods.build(food_params)
     respond_to do |format|
       if @food.save
         format.html { redirect_to food_url(@food), notice: 'Food was successfully created.' }
@@ -64,6 +65,6 @@ class FoodsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def food_params
-    params.require(:food).permit(:name, :measurements, :price, :quantity, :user_id)
+    params.require(:food).permit(:name, :measurements, :price, :quantity)
   end
 end
