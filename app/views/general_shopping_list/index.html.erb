@@ -1,33 +1,41 @@
-<h2 class="mt-4 text-center">Shopping List</h2>
+<section>
+  <% @food_table_data = [] %>
+  <% @food_to_buy = 0 %>
+  <% @total_food_value = 0 %>
+  <% @foods.each do |food| %>
+    <% @ingredient_quantity = @ingredients.where(food_id: food.id).sum(:quantity) +1 %>
+    <% if @ingredient_quantity >= food.quantity %>
+      <% @quantity_diff = @ingredient_quantity - food.quantity %>
+      <% @total_price = @quantity_diff * food.price %>
+      <% @food_table_data.push([food.name, @quantity_diff, @total_price]) %>
+      <% @food_to_buy += 1 %>
+      <% @total_food_value += @total_price %>
+    <% end %>
+  <% end %>
 
-<div class="shopping-list">
-  <div class="shopping-ptag">
-    <p>Amount of food to buy: <%= @shopping_list_foods.length %></p>
-    <p>Total value of food needed: $<%= @total_value_of_food_needed %></p>
+<div class="tab-content d-flex justify-content-center">
+  <div class="tab-pane fade show active border rounded p-5" style="width: 57%" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+    <h1 class="mb-5 text-center">Shopping List</h1>
+    <p class="mb-5 text-center"><span>Ammount of food items to buy <%=@food_to_buy%>.</span>  <span>Total value of food needed $<%=@total_food_value%></span></p>
+
+    <table id='foods_table' class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Food</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%@food_table_data.each do |data|%>
+          <tr>
+            <td><%= data[0] %></td>
+            <td><%= data[1] %></td>
+            <td><%= data[2] %></td>
+          </tr>
+        <%end%>
+      </tbody>
+    </table>
   </div>
 </div>
-
-<hr />
-
-<% if @shopping_list_foods.present? %>
-  <table id="shopping-list" class="table">
-    <thead>
-      <tr>
-        <th>Food</th>
-        <th>Quantity</th>
-        <th>Price</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @shopping_list_foods.each do |food| %>
-        <tr>
-          <td><%= food.name %></td>
-          <td><%= "#{food.quantity} #{food.measurements}" %></td>
-          <td>$<%= food.price * food.quantity %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p class="text-center">No items in the shopping list</p>
-<% end %>
+</section>

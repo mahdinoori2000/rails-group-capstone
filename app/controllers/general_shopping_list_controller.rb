@@ -2,8 +2,10 @@ class GeneralShoppingListController < ApplicationController
   before_action :calculate_total_value_of_food_needed, only: [:index]
 
   def index
-    @user = current_user
-    @shopping_list_foods = @user.general_shopping_list
+    @foods = Food.where(user_id: current_user.id)
+    @ingredients = RecipeFood.joins(:recipe).where(recipes: { user_id: current_user.id })
+    # @user = current_user
+    # @shopping_list_foods = @user.general_shopping_list
   end
 
   private
