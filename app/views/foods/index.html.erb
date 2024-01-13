@@ -1,0 +1,30 @@
+<div class="food-list">
+  <%= link_to "New food", new_food_path, class: "float-right btn btn-primary" %>
+
+  <% if @foods.present? %>
+    <table id="food-list" class="table">
+      <thead>
+        <tr>
+          <th>Food</th>
+          <th>Measurements</th>
+          <th>Unit Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @foods.each do |food| %>
+          <tr>
+            <td><%= food.name %></td>
+            <td><%= food.measurements %></td>
+            <td><%= food.price %></td>
+            <td>
+              <%= button_to "Delete", food, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="text-center">No items in the Food list</p>
+  <% end %>
+</div>
